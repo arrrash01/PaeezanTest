@@ -90,12 +90,13 @@ public class GameManager : MonoBehaviour
         {
             highscore = score;
             PlayerPrefs.SetInt("HighScore", highscore);
-            PlayerPrefs.Save();
         }
-
         endScoreText.text = "Score: " + score;
         highScoreText.text = "High Score: " + highscore;
+        PlayerPrefs.SetInt("LastScore", score);
+        PlayerPrefs.Save();
         endGameUI.SetActive(true);
+
     }
 
     public void RestartLevel()

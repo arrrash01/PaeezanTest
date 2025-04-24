@@ -84,8 +84,12 @@ public class LeaderboardDataProvider : MonoBehaviour
                 name = allTimeEntries[i].name,
                 score = allTimeEntries[i].score
             };
-
-        }        
+            if (allTimeEntries[i].name == playerName)
+            {
+                PlayerPrefs.SetInt("PlayerRank", i + 1);
+                PlayerPrefs.Save();
+            }
+        }
     }
 
     public int TotalCount => dailyEntries.Count;

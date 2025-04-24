@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour
     public Transform centerPoint;
     public float angularSpeed = 100f;
     public float radiusTweenDuration = 0.2f;
-
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private AudioClip coinClip;
+    [SerializeField] private AudioClip loseClip;
     private float currentRadius;
     private Tween radiusTween;
     private InputAction touchPress;
+    
 
     void Awake()
     {
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         float target = Mathf.Approximately(currentRadius, GameManager.instance.outerRadius) ? GameManager.instance.innerRadius : GameManager.instance.outerRadius;
         radiusTween?.Kill();
+        audioSource.PlayOneShot(jumpClip);
         radiusTween = DOTween.To(() => currentRadius, x => currentRadius = x, target, radiusTweenDuration)
                              .SetEase(Ease.OutQuad);
     }
@@ -52,6 +57,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.CompareTag("Obstacle"))
         {
+            audioSource.PlayOneShot(loseClip);
             GameManager.instance.EndGame();
             
         }
@@ -65,6 +71,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             GameManager.instance.OnPointCollected();
+            audioSource.PlayOneShot(coinClip);
         }
     }
 }
