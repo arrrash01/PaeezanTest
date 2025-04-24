@@ -6,6 +6,7 @@ public class MainMenuManager : MonoBehaviour
     public Button shopTab, playTab, leaderboardTab;
     public GameObject shopPanel, playPanel, leaderboardPanel;
 
+
     void Start()
     {
         shopTab.onClick.AddListener(() => ShowPanel(shopPanel));

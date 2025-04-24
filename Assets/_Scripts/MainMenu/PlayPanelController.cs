@@ -7,6 +7,8 @@ public class PlayPanelController : MonoBehaviour
 {
     public TextMeshProUGUI highScoreText;
     public Button playButton;
+    public Button SettingsButton;
+    public GameObject SettingsPanel;
 
     void Start()
     {
@@ -14,6 +16,9 @@ public class PlayPanelController : MonoBehaviour
         highScoreText.text = "High Score: " + highScore;
         playButton.onClick.AddListener(() => {
             SceneManager.LoadScene("GameScene");
+        });
+        SettingsButton.onClick.AddListener(() => { 
+            SettingsPanel.SetActive(true);
         });
     }
 }
