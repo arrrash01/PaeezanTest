@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
@@ -61,14 +62,23 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
-            float radius = (Random.value < .5f ? innerRadius : outerRadius);
-            Vector2 pos = new Vector2(
-                centerPoint.position.x + Mathf.Cos(angle) * radius,
-                centerPoint.position.y + Mathf.Sin(angle) * radius
+            float angleRad = Random.Range(0f, Mathf.PI * 2f); 
+            
+            //float radius = (Random.value < .5f ? innerRadius : outerRadius);
+            Vector2 pos = (Vector2) centerPoint.position + new Vector2(
+                Mathf.Cos(angleRad) * (outerRadius),
+                Mathf.Sin(angleRad) * (outerRadius)
             );
-            var o = Instantiate(obstaclePrefab, pos, Quaternion.identity, obstacleParent);
-            obstacles.Add(o);
+            Vector2 radialDir = (pos - (Vector2)centerPoint.position).normalized;
+            var obs = Instantiate(obstaclePrefab, pos, Quaternion.identity,obstacleParent);
+            obs.transform.up = radialDir;
+            obs.pointingOutward = Random.value < .5f;
+            obs.obstacleTransform.localPosition = new Vector3(obs.obstacleTransform.localPosition.x, obs.obstacleTransform.localPosition.y + (obs.pointingOutward ? 0f : -1));
+            obstacles.Add(obs);
         }
+    }
+    public void EndGame()
+    {
+
     }
 }
