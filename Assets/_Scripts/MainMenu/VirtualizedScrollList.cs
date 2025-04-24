@@ -16,6 +16,7 @@ public class VirtualizedScrollList : MonoBehaviour
     private int visibleCount;
     private List<LeaderboardEntry> pool;
     private float entryHeight;
+    private Tabs activeTab;
     void Awake()
     {
         scrollRect = GetComponent<ScrollRect>();
@@ -35,7 +36,7 @@ public class VirtualizedScrollList : MonoBehaviour
         pool = new List<LeaderboardEntry>(poolSize);
         for (int i = 0; i < poolSize; i++)
             pool.Add(Instantiate(itemPrefab, content));
-
+        activeTab = Tabs.daily;
         UpdatePoolItems();
     }
 
@@ -69,10 +70,32 @@ public class VirtualizedScrollList : MonoBehaviour
             pool[i].gameObject.SetActive(true);
             float y = -dataIndex * entryHeight;
             pool[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, y);
-
-            var e = dataProvider.GetEntry(dataIndex);
+            LeaderboardDataProvider.Entry e=new();
+            switch (activeTab)
+            {
+                case Tabs.daily:
+                    e = dataProvider.GetDailyEntry(dataIndex);
+                    break;
+                case Tabs.weekly:
+                    e = dataProvider.GetWeeklyEntry(dataIndex);
+                    break;
+                case Tabs.allTime:
+                    e = dataProvider.GetAllTimeEntry(dataIndex);
+                    break;
+            }
             bool isMe = e.name == dataProvider.playerName;
             pool[i].Initialize(e.rank, e.name, e.score, dataProvider.playerColor, isMe);
         }
+    }
+    public void SetActiveTab(int index)
+    {
+        activeTab = (Tabs)index;
+        UpdatePoolItems();
+    }
+    public enum Tabs
+    {
+        daily,
+        weekly,
+        allTime
     }
 }
