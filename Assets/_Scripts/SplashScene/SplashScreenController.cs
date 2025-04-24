@@ -10,7 +10,10 @@ public class SplashScreenController : MonoBehaviour
     public TextMeshProUGUI percentageText;
     public string sceneToLoad = "MainMenuScene";
 
-
+    private void Awake()
+    {
+        Input.backButtonLeavesApp = false;
+    }
     void Start()
     {
         StartCoroutine(LoadAsync());

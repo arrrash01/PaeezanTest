@@ -52,7 +52,7 @@ public class SettingsManager : MonoBehaviour
     {
         PlayerProfile profile = new PlayerProfile
         {
-            playerName = PlayerPrefs.GetString("PlayerName", "Player"),
+            playerName = PlayerPrefs.GetString("PlayerName", "You"),
             lastScore = PlayerPrefs.GetInt("LastScore", 0),
             highScore = PlayerPrefs.GetInt("HighScore", 0),
             currentRank = PlayerPrefs.GetInt("PlayerRank", 9999),

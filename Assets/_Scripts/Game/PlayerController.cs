@@ -48,29 +48,30 @@ public class PlayerController : MonoBehaviour
         float target = Mathf.Approximately(currentRadius, GameManager.instance.outerRadius) ? GameManager.instance.innerRadius : GameManager.instance.outerRadius;
         radiusTween?.Kill();
         audioSource.PlayOneShot(jumpClip);
+        if (PlayerPrefs.GetInt("Vibration_On", 1) == 1)
+            Handheld.Vibrate();
         radiusTween = DOTween.To(() => currentRadius, x => currentRadius = x, target, radiusTweenDuration)
                              .SetEase(Ease.OutQuad);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collided in Collision with: ");
-        Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             audioSource.PlayOneShot(loseClip);
+            if (PlayerPrefs.GetInt("Vibration_On", 1) == 1)
+                Handheld.Vibrate();
             GameManager.instance.EndGame();
             
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collided in trigger with: ");
-        Debug.Log(collision.tag);
-
         if (collision.CompareTag("Collectible"))
         {
             Destroy(collision.gameObject);
             GameManager.instance.OnPointCollected();
+            if (PlayerPrefs.GetInt("Vibration_On", 1) == 1)
+                Handheld.Vibrate();
             audioSource.PlayOneShot(coinClip);
         }
     }
