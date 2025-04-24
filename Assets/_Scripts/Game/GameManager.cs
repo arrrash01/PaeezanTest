@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour
     private List<ObstacleController> obstacles = new List<ObstacleController>();
     public PlayerController playerController;
     public TextMeshProUGUI scoreText;
-
+    public TextMeshProUGUI highScoreText;
+    private int highscore=0;
+    private GameObject endGameUI;
 
     private void Awake()
     {
@@ -30,6 +32,8 @@ public class GameManager : MonoBehaviour
     {
         SpawnCollectible();
         SpawnObstacles(obstaclesPerWave);
+        highscore = PlayerPrefs.GetInt("HighScore", 0);
+        endGameUI.SetActive(false);
     }
     public void OnPointCollected()
     {
@@ -79,6 +83,23 @@ public class GameManager : MonoBehaviour
     }
     public void EndGame()
     {
+        Time.timeScale = 0f;
 
+        if (score > highscore)
+        {
+            highscore = score;
+            PlayerPrefs.SetInt("HighScore", highscore);
+            PlayerPrefs.Save();
+        }
+
+        scoreText.text = "Score: " + score;
+        highScoreText.text = "High Score: " + highscore;
+        endGameUI.SetActive(true);
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

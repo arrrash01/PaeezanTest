@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             OnTap();
         }
         transform.RotateAround(centerPoint.position, Vector3.forward, angularSpeed * Time.deltaTime);
