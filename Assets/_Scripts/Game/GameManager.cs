@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        SpawnCollectible();
         SpawnObstacles(obstaclesPerWave);
+        SpawnCollectible();
         highscore = PlayerPrefs.GetInt("HighScore", 0);
         endGameUI.SetActive(false);
     }
@@ -42,12 +42,17 @@ public class GameManager : MonoBehaviour
     {
         score++;
         updateScore();
-        playerController.angularSpeed += 5f;
-        SpawnCollectible();
+        if(playerController.angularSpeed<playerController.maxAngularSpeed)
+            playerController.angularSpeed += 5f;
+        else
+            playerController.angularSpeed = playerController.maxAngularSpeed;
         foreach (var obs in obstacles)
             obs.RandomFlip();
-        if (score % 10 == 0)
+        if (score % 10 == 0 && obstaclesPerWave < 8) {
             SpawnObstacles(1);
+            obstaclesPerWave++;
+        }
+        SpawnCollectible();
     }
 
     private void updateScore()
@@ -57,14 +62,31 @@ public class GameManager : MonoBehaviour
 
     public void SpawnCollectible()
     {
-        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        Vector2 pos= GetValidCollectiblePosition();
+        /*float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         float radius = (Random.value < .5f ? innerRadius : outerRadius);
         Vector2 pos = new Vector2(
             centerPoint.position.x + Mathf.Cos(angle) * radius,
             centerPoint.position.y + Mathf.Sin(angle) * radius
-        );
+        );*/
         Instantiate(collectiblePrefab, pos, Quaternion.identity);
     }
+    Vector2 GetValidCollectiblePosition()
+    {
+        
+        while (true) {
+            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float radius = (Random.value < .5f ? innerRadius : outerRadius);
+            Vector2 pos = new Vector2(
+                centerPoint.position.x + Mathf.Cos(angle) * radius,
+                centerPoint.position.y + Mathf.Sin(angle) * radius
+            );
+            Collider2D hit = Physics2D.OverlapCircle(pos,0.5f);
+            if (hit == null)
+                return pos;
+        }
+       
+    }   
     public void SpawnObstacles(int count)
     {
         for (int i = 0; i < count; i++)

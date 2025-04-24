@@ -9,9 +9,8 @@ public class ObstacleController : MonoBehaviour
     {
         if (Random.value < 0.5f)
         {
-            Debug.Log("Changed direction of obstacle");
             pointingOutward = !pointingOutward;
-            obstacleTransform.DOLocalMoveY((pointingOutward ? 0f : -0.35f), 1f);
+            obstacleTransform.DOLocalMoveY((pointingOutward ? 0f : -0.35f), .4f);
         }
     }
 }

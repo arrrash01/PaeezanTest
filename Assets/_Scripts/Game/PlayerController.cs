@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public Transform centerPoint;
     public float angularSpeed = 100f;
+    public float maxAngularSpeed = 150f;
     public float radiusTweenDuration = 0.2f;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip jumpClip;
@@ -22,7 +23,6 @@ public class PlayerController : MonoBehaviour
         DOTween.Init();
         EnhancedTouchSupport.Enable();
 
-        // define touch action
         touchPress = new InputAction(binding: "<Touchscreen>/touch*/press");
         touchPress.performed += _ => OnTap();
         touchPress.Enable();
@@ -38,7 +38,6 @@ public class PlayerController : MonoBehaviour
             OnTap();
         }
         transform.RotateAround(centerPoint.position, Vector3.forward, angularSpeed * Time.deltaTime);
-        // enforce radius
         Vector3 dir = (transform.position - centerPoint.position).normalized;
         transform.position = centerPoint.position + dir * currentRadius;
     }
