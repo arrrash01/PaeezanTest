@@ -8,7 +8,7 @@ public class SplashScreenController : MonoBehaviour
 {
     public Slider loadingBar;
     public TextMeshProUGUI percentageText;
-    public string sceneToLoad = "MainMenuScene";
+    public string sceneToLoad = "MainMenu";
 
     private void Awake()
     {

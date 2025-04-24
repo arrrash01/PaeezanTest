@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI highScoreText;
     private int highscore=0;
     public GameObject endGameUI;
+    public bool isPlaying;
 
     private void Awake()
     {
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
         SpawnCollectible();
         highscore = PlayerPrefs.GetInt("HighScore", 0);
         endGameUI.SetActive(false);
+        isPlaying= true;
     }
     public void OnPointCollected()
     {
@@ -63,12 +65,6 @@ public class GameManager : MonoBehaviour
     public void SpawnCollectible()
     {
         Vector2 pos= GetValidCollectiblePosition();
-        /*float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        float radius = (Random.value < .5f ? innerRadius : outerRadius);
-        Vector2 pos = new Vector2(
-            centerPoint.position.x + Mathf.Cos(angle) * radius,
-            centerPoint.position.y + Mathf.Sin(angle) * radius
-        );*/
         Instantiate(collectiblePrefab, pos, Quaternion.identity);
     }
     Vector2 GetValidCollectiblePosition()
@@ -91,13 +87,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            float angleRad = Random.Range(0f, Mathf.PI * 2f); 
-            
-            //float radius = (Random.value < .5f ? innerRadius : outerRadius);
-            Vector2 pos = (Vector2) centerPoint.position + new Vector2(
-                Mathf.Cos(angleRad) * (outerRadius),
-                Mathf.Sin(angleRad) * (outerRadius)
-            );
+            Vector2 pos = GetValidObstaclePosition();
             Vector2 radialDir = (pos - (Vector2)centerPoint.position).normalized;
             var obs = Instantiate(obstaclePrefab, pos, Quaternion.identity,obstacleParent);
             obs.transform.up = radialDir;
@@ -106,10 +96,29 @@ public class GameManager : MonoBehaviour
             obstacles.Add(obs);
         }
     }
+    Vector2 GetValidObstaclePosition()
+    {
+        var i = 0;
+        Vector2 pos=Vector2.zero;
+        while (i<50)
+        {
+            float angleRad = Random.Range(0f, Mathf.PI * 2f);
+            pos = (Vector2)centerPoint.position + new Vector2(
+                Mathf.Cos(angleRad) * (outerRadius),
+                Mathf.Sin(angleRad) * (outerRadius)
+            );
+            Collider2D hit = Physics2D.OverlapCircle(pos, 0.5f);
+            if (hit == null)
+                return pos;
+            i++;
+        }
+        return pos;
+         
+    }
     public void EndGame()
     {
         Time.timeScale = 0f;
-
+        isPlaying = false;
         if (score > highscore)
         {
             highscore = score;
@@ -130,7 +139,7 @@ public class GameManager : MonoBehaviour
     }
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MainMenu");
     }
     public void PunchButton(Button button)
     {

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
@@ -65,38 +64,19 @@ public class SettingsManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(profile, true);
-
-        string path = Path.Combine(Application.persistentDataPath, "PlayerProfile.json");
-        File.WriteAllText(path, json);
-        Debug.Log("Profile exported to: " + path);
-        ShareFile(path);
-    }
-    private void ShareFile(string path)
-    {
-        if (Application.platform != RuntimePlatform.Android) return;
-
-        // Android ACTION_SEND intent
+#if UNITY_ANDROID
         AndroidJavaClass intentClass = new AndroidJavaClass("android.content.Intent");
         AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent");
         intent.Call<AndroidJavaObject>("setAction", intentClass.GetStatic<string>("ACTION_SEND"));
-
-        // Create a java.io.File for our JSON and get a Uri
-        AndroidJavaObject fileObj = new AndroidJavaObject("java.io.File", path);
-        AndroidJavaClass uriClass = new AndroidJavaClass("android.net.Uri");
-        AndroidJavaObject uri = uriClass.CallStatic<AndroidJavaObject>("fromFile", fileObj);
-
-        // Attach the file and set MIME type
-        intent.Call<AndroidJavaObject>("putExtra", intentClass.GetStatic<string>("EXTRA_STREAM"), uri);
-        intent.Call<AndroidJavaObject>("setType", "application/json");
-
-        // Wrap in chooser
+        intent.Call<AndroidJavaObject>("setType", "text/plain");
+        intent.Call<AndroidJavaObject>("putExtra",
+        intentClass.GetStatic<string>("EXTRA_TEXT"), json);
+        AndroidJavaClass unity = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject currentActivity = unity.GetStatic<AndroidJavaObject>("currentActivity");
         AndroidJavaObject chooser = intentClass.CallStatic<AndroidJavaObject>(
             "createChooser", intent, "Share Player Profile");
-
-        // Launch from Unity’s current Activity
-        AndroidJavaObject unityActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer")
-            .GetStatic<AndroidJavaObject>("currentActivity");
-        unityActivity.Call("startActivity", chooser);
+        currentActivity.Call("startActivity", chooser);
+#endif
     }
 
     public void SetSFX(bool on)

@@ -7,6 +7,7 @@ public class PauseSystem : MonoBehaviour
     public void TogglePause()
     {
         paused = !paused;
+        GameManager.instance.isPlaying = !paused;
         pausePanel.SetActive(paused);
         Time.timeScale = paused ? 0f : 1f;
     }

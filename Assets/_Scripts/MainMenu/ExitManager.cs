@@ -10,15 +10,12 @@ public class ExitManager : MonoBehaviour
     void Awake()
     {
         exitPopup.SetActive(false);
-
-        // Wire UI buttons
         yesButton.onClick.AddListener(ConfirmExit);
         noButton.onClick.AddListener(CancelExit);
     }
 
     void Update()
     {
-        // Android Back / Escape key
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (PlayerPrefs.GetInt("Vibration_On", 1) == 1)

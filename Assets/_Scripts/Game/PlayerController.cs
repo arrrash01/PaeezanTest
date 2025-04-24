@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.EnhancedTouch;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
@@ -15,17 +14,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip loseClip;
     private float currentRadius;
     private Tween radiusTween;
-    private InputAction touchPress;
     
 
     void Awake()
     {
         DOTween.Init();
-        EnhancedTouchSupport.Enable();
-
-        touchPress = new InputAction(binding: "<Touchscreen>/touch*/press");
-        touchPress.performed += _ => OnTap();
-        touchPress.Enable();
     }
     private void Start()
     {
@@ -34,7 +27,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetMouseButtonDown(0)) {
             OnTap();
         }
         transform.RotateAround(centerPoint.position, Vector3.forward, angularSpeed * Time.deltaTime);
@@ -46,9 +39,10 @@ public class PlayerController : MonoBehaviour
     {
         float target = Mathf.Approximately(currentRadius, GameManager.instance.outerRadius) ? GameManager.instance.innerRadius : GameManager.instance.outerRadius;
         radiusTween?.Kill();
-        audioSource.PlayOneShot(jumpClip);
-        if (PlayerPrefs.GetInt("Vibration_On", 1) == 1)
-            Handheld.Vibrate();
+        if (GameManager.instance.isPlaying)
+        {
+            audioSource.PlayOneShot(jumpClip);
+        }
         radiusTween = DOTween.To(() => currentRadius, x => currentRadius = x, target, radiusTweenDuration)
                              .SetEase(Ease.OutQuad);
     }
