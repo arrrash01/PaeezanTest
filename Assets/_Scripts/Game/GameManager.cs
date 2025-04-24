@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
@@ -103,5 +105,13 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MainMenuScene");
+    }
+    public void PunchButton(Button button)
+    {
+        button.transform.DOPunchScale(button.transform.localScale * 1.05f, 0.3f);
     }
 }

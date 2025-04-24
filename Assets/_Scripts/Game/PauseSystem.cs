@@ -9,6 +9,5 @@ public class PauseSystem : MonoBehaviour
         paused = !paused;
         pausePanel.SetActive(paused);
         Time.timeScale = paused ? 0f : 1f;
-
     }
 }
