@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ShareSystem : MonoBehaviour
 {
@@ -7,8 +8,8 @@ public class ShareSystem : MonoBehaviour
         int hs = PlayerPrefs.GetInt("HighScore", 0);
         string message = "I scored " + hs + " points in Tricky Ring! Can you beat me?";
 
-        string shareUrl = "mailto:?subject=" + WWW.EscapeURL("My High Score") +
-                          "&body=" + WWW.EscapeURL(message);
+        string shareUrl = "mailto:?subject=" + UnityWebRequest.EscapeURL("My High Score") +
+                          "&body=" + UnityWebRequest.EscapeURL(message);
         Application.OpenURL(shareUrl);
     }
 }

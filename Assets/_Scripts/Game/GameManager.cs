@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviour
     private List<ObstacleController> obstacles = new List<ObstacleController>();
     public PlayerController playerController;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI endScoreText;
     public TextMeshProUGUI highScoreText;
     private int highscore=0;
-    private GameObject endGameUI;
+    public GameObject endGameUI;
 
     private void Awake()
     {
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviour
             var obs = Instantiate(obstaclePrefab, pos, Quaternion.identity,obstacleParent);
             obs.transform.up = radialDir;
             obs.pointingOutward = Random.value < .5f;
-            obs.obstacleTransform.localPosition = new Vector3(obs.obstacleTransform.localPosition.x, obs.obstacleTransform.localPosition.y + (obs.pointingOutward ? 0f : -1));
+            obs.obstacleTransform.localPosition = new Vector3(0f, (obs.pointingOutward ? 0f : -0.35f));
             obstacles.Add(obs);
         }
     }
@@ -92,7 +93,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        scoreText.text = "Score: " + score;
+        endScoreText.text = "Score: " + score;
         highScoreText.text = "High Score: " + highscore;
         endGameUI.SetActive(true);
     }
