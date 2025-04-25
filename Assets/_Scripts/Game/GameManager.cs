@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
     }
     public void EndGame()
     {
-        Time.timeScale = 0f;
+        
         isPlaying = false;
         if (score > highscore)
         {
@@ -128,7 +128,9 @@ public class GameManager : MonoBehaviour
         highScoreText.text = "High Score: " + highscore;
         PlayerPrefs.SetInt("LastScore", score);
         PlayerPrefs.Save();
+        endGameUI.transform.localScale = new Vector3(.05f, .05f, .05f);
         endGameUI.SetActive(true);
+        endGameUI.transform.DOScale(Vector3.one, 0.4f).OnComplete(() => { Time.timeScale = 0f; });
 
     }
 
@@ -143,6 +145,6 @@ public class GameManager : MonoBehaviour
     }
     public void PunchButton(Button button)
     {
-        button.transform.DOPunchScale(button.transform.localScale * 1.05f, 0.3f);
+        button.transform.DOPunchScale(button.transform.localScale * 1.05f, 0.3f, vibrato: 2);
     }
 }

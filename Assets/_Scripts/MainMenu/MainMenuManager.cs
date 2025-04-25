@@ -39,6 +39,6 @@ public class MainMenuManager : MonoBehaviour
     {
         DOTween.Kill(button);
         button.transform.localScale = Vector3.one;
-        button.transform.DOPunchScale(button.transform.localScale * 1.05f, 0.3f);
+        button.transform.DOPunchScale(button.transform.localScale * 1.05f, 0.3f,vibrato:2);
     }
 }

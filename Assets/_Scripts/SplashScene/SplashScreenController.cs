@@ -13,6 +13,8 @@ public class SplashScreenController : MonoBehaviour
     private void Awake()
     {
         Input.backButtonLeavesApp = false;
+        Application.targetFrameRate = 120;
+        QualitySettings.vSyncCount = 0;
     }
     void Start()
     {

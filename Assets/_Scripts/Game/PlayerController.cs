@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (!GameManager.instance.isPlaying)
+            return;
         if (Input.GetMouseButtonDown(0)) {
             OnTap();
         }
