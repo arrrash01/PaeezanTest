@@ -11,11 +11,6 @@
 - [Getting Started](#getting-started)  
   - [Prerequisites](#prerequisites)  
   - [Installation](#installation)  
-  - [Running the Game](#running-the-game)  
-- [Controls](#controls)  
-- [Project Structure](#project-structure)  
-- [Settings & UI](#settings--ui)  
-- [Leaderboard Tabs](#leaderboard-tabs)  
 - [Contributing](#contributing)  
 - [License](#license)  
 
